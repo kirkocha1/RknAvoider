@@ -6,8 +6,11 @@ class TelegramVsRknGame : Game() {
 
 
     override fun create() {
-        setScreen(MainScreen())
+        setScreen(MainScreen(this))
     }
 
+    override fun render() {
+        super.render()
 
+    }
 }

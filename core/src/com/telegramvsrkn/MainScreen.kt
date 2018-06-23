@@ -7,7 +7,7 @@ import com.telegramvsrkn.handlers.InputHandler
 import com.telegramvsrkn.models.MainGamePlace
 import com.telegramvsrkn.models.MainGameRenderer
 
-class MainScreen : Screen {
+class MainScreen(game: TelegramVsRknGame) : Screen {
     val screenWidth = Gdx.graphics.width.toFloat()
     val screenHeight = Gdx.graphics.height.toFloat()
     private val renderer: MainGameRenderer
@@ -16,12 +16,12 @@ class MainScreen : Screen {
 
     init {
         mainGamePlace = MainGamePlace(screenWidth, screenHeight)
-        renderer = MainGameRenderer(mainGamePlace, screenWidth, screenHeight)
+        renderer = MainGameRenderer(game, mainGamePlace, screenWidth, screenHeight)
         Gdx.input.inputProcessor = InputHandler(mainGamePlace.telegramPlayer, renderer.cam)
     }
 
     override fun show() {
-
+        renderer.onStart()
     }
 
     override fun render(delta: Float) {
@@ -29,6 +29,7 @@ class MainScreen : Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         mainGamePlace.update(delta)
         renderer.render(delta)
+
     }
 
     override fun resize(width: Int, height: Int) {

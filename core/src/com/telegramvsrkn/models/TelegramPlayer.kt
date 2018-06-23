@@ -4,16 +4,32 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
+import com.telegramvsrkn.GlobalConfig
+import com.telegramvsrkn.utils.CollisionRect
 
 
-class TelegramPlayer(var x: Float, var y: Float, var width: Int, var height: Int) : Drawer {
+class TelegramPlayer(var x: Float, var y: Float, var width: Int, var height: Int, var lifeCount: Int = GlobalConfig.LIFE_COUNT) : Drawer {
     private val position: Vector2 = Vector2(x, y);
     private val previousClickPosition = Vector2(x, y)
     private val telegramTexture = Texture("ic_telegram_player.png")
     private val SPEED = 300f
+    var playerRect: CollisionRect
+
+    var isImmortal = false
+    var wasKilled = false
+    var isBlank = false
+    var immortalTimer = GlobalConfig.IMMORTAL_TIME
+    val hitSound = Gdx.audio.newSound(Gdx.files.internal("data/Burst.mp3"))
+
+    init {
+        playerRect = CollisionRect(position.x, position.y, width, height)
+    }
 
     fun update(delta: Float) {
-
+        immortalTimer -= delta
+        if (immortalTimer < 0) {
+            isImmortal = false
+        }
     }
 
     fun onClick(screenX: Float, screenY: Float) {
@@ -31,6 +47,7 @@ class TelegramPlayer(var x: Float, var y: Float, var width: Int, var height: Int
             position.y -= SPEED * Gdx.graphics.getDeltaTime();
         }
         checkForVerticalBounds()
+        playerRect.move(position.x, position.y)
         previousClickPosition.x = screenX
         previousClickPosition.y = screenY
     }
@@ -54,10 +71,40 @@ class TelegramPlayer(var x: Float, var y: Float, var width: Int, var height: Int
     }
 
     override fun draw(batcher: SpriteBatch) {
-        batcher.draw(telegramTexture, position.x, position.y, width.toFloat(), height.toFloat())
+        if (!wasKilled) {
+            if (isImmortal) {
+                drawImmortal(batcher)
+            } else {
+                batcher.draw(telegramTexture, position.x, position.y, width.toFloat(), height.toFloat())
+            }
+        }
     }
 
+    fun hit() {
+        if (!isImmortal) {
+            lifeCount--
+            if (lifeCount < 0) {
+                wasKilled = true
+            } else {
+                hitSound.play()
+                startImmortalTimer()
+            }
+        }
+    }
 
+    private fun startImmortalTimer() {
+        isImmortal = true
+        immortalTimer = GlobalConfig.IMMORTAL_TIME
+    }
+
+    private fun drawImmortal(batcher: SpriteBatch) {
+        if (isBlank) {
+            batcher.draw(telegramTexture, position.x, position.y, width.toFloat(), height.toFloat())
+            isBlank = false
+        } else {
+            isBlank = true
+        }
+    }
 }
 
 interface Drawer {

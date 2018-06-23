@@ -2,10 +2,11 @@ package com.telegramvsrkn.models
 
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.telegramvsrkn.GlobalConfig
 
 class MainGamePlace(var screnWidth: Float, var screenHeight: Float) {
 
-    var telegramPlayer = TelegramPlayer(screnWidth / 2, screenHeight / 2, 150, 150)
+    var telegramPlayer = TelegramPlayer(screnWidth / 2, screenHeight / 2, GlobalConfig.PLAYER_WIDTH, GlobalConfig.PLAYER_WIDTH)
 
     fun update(delta: Float) {
         Gdx.app.log("GameWorld", "update");
@@ -15,4 +16,6 @@ class MainGamePlace(var screnWidth: Float, var screenHeight: Float) {
     fun render(batch: SpriteBatch) {
         telegramPlayer.draw(batch)
     }
+
+    fun isGameOver() = telegramPlayer.wasKilled
 }
