@@ -1,14 +1,14 @@
 package com.telegramvsrkn
 
 import com.badlogic.gdx.Game
-import com.telegramvsrkn.screens.MainScreen
+import com.telegramvsrkn.screens.SplashScreen
 
 class TelegramVsRknGame : Game() {
 
 
     override fun create() {
 
-        setScreen(MainScreen(this))
+        setScreen(SplashScreen(this))
     }
 
     override fun render() {
