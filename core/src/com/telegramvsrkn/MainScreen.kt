@@ -10,11 +10,13 @@ import com.telegramvsrkn.models.MainGameRenderer
 class MainScreen : Screen {
     val screenWidth = Gdx.graphics.width.toFloat()
     val screenHeight = Gdx.graphics.height.toFloat()
-    private val mainGamePlace = MainGamePlace(screenWidth, screenHeight)
-    private val renderer = MainGameRenderer(mainGamePlace)
+    private val renderer: MainGameRenderer
+    private val mainGamePlace: MainGamePlace
 
     init {
-        Gdx.input.inputProcessor = InputHandler(mainGamePlace.telegramPlayer)
+        mainGamePlace = MainGamePlace(screenWidth, screenHeight)
+        renderer = MainGameRenderer(mainGamePlace, screenWidth, screenHeight)
+        Gdx.input.inputProcessor = InputHandler(mainGamePlace.telegramPlayer, renderer.cam)
     }
 
     override fun show() {

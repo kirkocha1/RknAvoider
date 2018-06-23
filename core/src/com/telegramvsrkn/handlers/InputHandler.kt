@@ -1,9 +1,16 @@
 package com.telegramvsrkn.handlers
 
+import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputProcessor
+import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.math.Vector3
 import com.telegramvsrkn.models.TelegramPlayer
 
-class InputHandler(private val telegramPlayer: TelegramPlayer) : InputProcessor {
+class InputHandler(
+        private val telegramPlayer: TelegramPlayer,
+        private val cam: OrthographicCamera
+) : InputProcessor {
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int) = false
 
     override fun mouseMoved(screenX: Int, screenY: Int) = false
@@ -15,7 +22,8 @@ class InputHandler(private val telegramPlayer: TelegramPlayer) : InputProcessor 
     override fun keyUp(keycode: Int) = false
 
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
-        telegramPlayer.onClick(screenX, screenY)
+
+        telegramPlayer.onClick(getInputInGameWorld().x, getInputInGameWorld().y)
         return true
     }
 
@@ -23,4 +31,9 @@ class InputHandler(private val telegramPlayer: TelegramPlayer) : InputProcessor 
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int) = false
 
+    fun getInputInGameWorld(): Vector2 {
+        val inputScreen = Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)
+        val unprojected = cam.project(inputScreen)
+        return Vector2(unprojected.x, unprojected.y)
+    }
 }
