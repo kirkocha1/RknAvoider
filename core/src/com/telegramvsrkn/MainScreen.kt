@@ -13,6 +13,7 @@ class MainScreen : Screen {
     private val renderer: MainGameRenderer
     private val mainGamePlace: MainGamePlace
 
+
     init {
         mainGamePlace = MainGamePlace(screenWidth, screenHeight)
         renderer = MainGameRenderer(mainGamePlace, screenWidth, screenHeight)
@@ -28,7 +29,6 @@ class MainScreen : Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
         mainGamePlace.update(delta)
         renderer.render(delta)
-
     }
 
     override fun resize(width: Int, height: Int) {
