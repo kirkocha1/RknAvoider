@@ -10,5 +10,4 @@ class CollisionRect(var x: Float, var y: Float, var width: Int, var height: Int)
     fun collidesWith(rect: CollisionRect): Boolean {
         return x < rect.x + rect.width && y < rect.y + rect.height && x + width > rect.x && y + height > rect.y
     }
-
 }

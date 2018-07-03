@@ -5,50 +5,41 @@ import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
-import com.rknavoider.TelegramVsRknGame
+import com.rknavoider.RknAvoiderGame
 
-class SplashScreen(private val game: TelegramVsRknGame) : Screen {
-    val screenWidth = Gdx.graphics.width.toFloat()
-    val screenHeight = Gdx.graphics.height.toFloat()
-    val batch = SpriteBatch()
-    val bkg = Texture("bkg_splash.png")
-    var cam = OrthographicCamera(screenWidth, screenHeight)
+class SplashScreen(private val avoiderGame: RknAvoiderGame) : Screen {
 
-    init {
-        batch.projectionMatrix = cam.combined
-        cam.setToOrtho(false, screenWidth, screenHeight);
+    private val screenWidth = Gdx.graphics.width.toFloat()
+    private val screenHeight = Gdx.graphics.height.toFloat()
+    private val camera = OrthographicCamera(screenWidth, screenHeight).apply {
+        setToOrtho(false, screenWidth, screenHeight)
     }
 
-    override fun hide() {
-
+    private val batch = SpriteBatch().apply {
+        projectionMatrix = camera.combined
     }
 
-    override fun show() {
-
-    }
+    private val bkg = Texture("bkg_splash.png")
 
     override fun render(delta: Float) {
-        batch.projectionMatrix = cam.combined
+        batch.projectionMatrix = camera.combined
         batch.begin()
         batch.draw(bkg, 0f, 0f, screenWidth, screenHeight)
         if (Gdx.input.isTouched) {
-            game.screen = MainScreen(game)
+            avoiderGame.screen = MainScreen(avoiderGame)
         }
         batch.end()
     }
 
-    override fun pause() {
-    }
+    override fun hide() {}
 
-    override fun resume() {
+    override fun show() {}
 
-    }
+    override fun pause() {}
 
-    override fun resize(width: Int, height: Int) {
+    override fun resume() {}
 
-    }
+    override fun resize(width: Int, height: Int) {}
 
-    override fun dispose() {
-
-    }
+    override fun dispose() {}
 }
