@@ -8,15 +8,15 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.scenes.scene2d.ui.Label
 import com.badlogic.gdx.utils.Align
-import com.rknavoider.models.ScrollingBackground
 import com.rknavoider.TelegramVsRknGame
-import com.rknavoider.models.MainGamePlace
+import com.rknavoider.models.RknAvoiderWorld
+import com.rknavoider.models.ScrollingBackground
 import com.rknavoider.screens.GameOverScreen
 
 
 class MainGameRenderer(
         private val game: TelegramVsRknGame,
-        private val mainGamePlace: MainGamePlace,
+        private val rknAvoiderPlace: RknAvoiderWorld,
         private val screenWidth: Float,
         private val screenHeight: Float
 ) {
@@ -25,11 +25,9 @@ class MainGameRenderer(
     private val batcher = SpriteBatch()
     private val background = ScrollingBackground(screenWidth, screenHeight)
     private val defaultFont = BitmapFont()
-    private val scoreLayout = GlyphLayout(defaultFont, "SCORE: " + mainGamePlace.score, Color.WHITE, 20f, Align.left, false)
-    private val lifeLayout = GlyphLayout(defaultFont, "LIFE: " + mainGamePlace.score, Color.WHITE, 20f, Align.left, false)
+    private val scoreLayout = GlyphLayout(defaultFont, "SCORE: " + rknAvoiderPlace.score, Color.WHITE, 20f, Align.left, false)
+    private val lifeLayout = GlyphLayout(defaultFont, "LIFE: " + rknAvoiderPlace.score, Color.WHITE, 20f, Align.left, false)
     val gameOverSound = Gdx.audio.newSound(Gdx.files.internal("data/GameOver.wav"))
-
-    val fontBatch = SpriteBatch()
 
     init {
         batcher.projectionMatrix = cam.combined
@@ -40,12 +38,12 @@ class MainGameRenderer(
         batcher.projectionMatrix = cam.combined
         batcher.begin()
         background.updateAndRender(delta, batcher)
-        mainGamePlace.render(delta, batcher)
-        scoreLayout.setText(defaultFont, mainGamePlace.score.toString())
+        rknAvoiderPlace.render(delta, batcher)
+        scoreLayout.setText(defaultFont, rknAvoiderPlace.score.toString())
         scoreLayout.width = scoreLayout.width * 10
         scoreLayout.height = scoreLayout.height * 10
-        val scoreLabel = Label("SCORE: " + mainGamePlace.score, Label.LabelStyle(defaultFont, Color.WHITE));
-        val lifeCount = Label("LIFE: " + mainGamePlace.telegramPlayer.lifeCount, Label.LabelStyle(defaultFont, Color.WHITE));
+        val scoreLabel = Label("SCORE: " + rknAvoiderPlace.score, Label.LabelStyle(defaultFont, Color.WHITE));
+        val lifeCount = Label("LIFE: " + rknAvoiderPlace.telegramPlayer.lifeCount, Label.LabelStyle(defaultFont, Color.WHITE));
         scoreLabel.fontScaleX = 3f
         scoreLabel.fontScaleY = 3f
         lifeCount.fontScaleX = 3f
@@ -55,8 +53,7 @@ class MainGameRenderer(
         lifeCount.draw(batcher, 1f)
         scoreLabel.draw(batcher, 1f)
         batcher.end()
-
-        if (mainGamePlace.isGameOver()) {
+        if (rknAvoiderPlace.isGameOver()) {
             gameOverSound.play()
             game.screen = GameOverScreen(game)
         }

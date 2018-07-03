@@ -8,17 +8,22 @@ class ScrollingBackground(
         private val screenHeight: Float
 ) {
 
-    internal var image: Texture
-    internal var y1: Float = 0.toFloat()
-    internal var y2: Float = 0.toFloat()
-    internal var speed: Int = 0//In pixels / second
-    internal var goalSpeed: Int = 0
-    internal var imageScale: Float = 0.toFloat()
-    internal var speedFixed: Boolean = false
+    companion object {
+        private val DEFAULT_SPEED = 200
+        private val ACCELERATION = 50
+        private val GOAL_REACH_ACCELERATION = 200
+    }
+
+    private var image: Texture
+    private var y1: Float = 0.toFloat()
+    private var y2: Float = 0.toFloat()
+    private var speed: Int = 0//In pixels / second
+    private var goalSpeed: Int = 0
+    private var imageScale: Float = 0.toFloat()
+    private var speedFixed: Boolean = false
 
     init {
         image = Texture("bkg_1.png")
-
         y1 = 0f
         y2 = image.height.toFloat()
         speed = 0
@@ -63,13 +68,6 @@ class ScrollingBackground(
 
     fun setSpeedFixed(speedFixed: Boolean) {
         this.speedFixed = speedFixed
-    }
-
-    companion object {
-
-        val DEFAULT_SPEED = 200
-        val ACCELERATION = 50
-        val GOAL_REACH_ACCELERATION = 200
     }
 
 }

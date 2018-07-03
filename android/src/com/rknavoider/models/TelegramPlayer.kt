@@ -6,25 +6,29 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 import com.rknavoider.configs.GlobalConfig
 import com.rknavoider.utils.CollisionRect
+import com.rknavoider.utils.Drawer
 
 
-class TelegramPlayer(var x: Float, var y: Float, var width: Int, var height: Int, var lifeCount: Int = GlobalConfig.LIFE_COUNT) : Drawer {
+class TelegramPlayer(
+        private var x: Float,
+        private var y: Float,
+        private var width: Int,
+        private var height: Int,
+        var lifeCount: Int = GlobalConfig.LIFE_COUNT
+) : Drawer {
+
     private val previousClickPosition = Vector2(x, y)
     private val telegramTexture = Texture("ic_telegram_player.png")
     private val telegramHurtedTexture = Texture("telegram_hurted.png")
+    private val hitSound = Gdx.audio.newSound(Gdx.files.internal("data/Burst.mp3"))
     private val SPEED = 500f
-    var playerRect: CollisionRect
+    private var isImmortal = false
+    private var isBlank = false
+    private var immortalTimer = GlobalConfig.IMMORTAL_TIME
+
     val position: Vector2 = Vector2(x, y);
-
-    var isImmortal = false
+    var playerRect = CollisionRect(position.x, position.y, width, height)
     var wasKilled = false
-    var isBlank = false
-    var immortalTimer = GlobalConfig.IMMORTAL_TIME
-    val hitSound = Gdx.audio.newSound(Gdx.files.internal("data/Burst.mp3"))
-
-    init {
-        playerRect = CollisionRect(position.x, position.y, width, height)
-    }
 
     fun update(delta: Float) {
         immortalTimer -= delta
@@ -113,6 +117,3 @@ class TelegramPlayer(var x: Float, var y: Float, var width: Int, var height: Int
     }
 }
 
-interface Drawer {
-    fun draw(batcher: SpriteBatch)
-}

@@ -5,12 +5,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.MathUtils
 import com.rknavoider.configs.GlobalConfig
 
-class MainGamePlace(var screenWidth: Float, var screenHeight: Float) {
-    private val bigEnemies = mutableListOf<BigEnemy>()
+class RknAvoiderWorld(var screenWidth: Float, var screenHeight: Float) {
+
+    private val bigEnemies = mutableListOf<BigRknEnemy>()
     private var bullets = mutableListOf<Bullet>()
     var telegramPlayer = TelegramPlayer(screenWidth / 2, screenHeight / 2, GlobalConfig.PLAYER_WIDTH, GlobalConfig.PLAYER_WIDTH)
     var score = 0
-    val rknEnemiesToRemove = mutableListOf<BigEnemy>()
+    val rknEnemiesToRemove = mutableListOf<BigRknEnemy>()
     val bulletsToRemove = mutableListOf<Bullet>()
     var nextBulletTime = GlobalConfig.BULLET_DELAY.toFloat()
     val hitSoundEnemy = Gdx.audio.newSound(Gdx.files.internal("data/EnemyDestroyed.wav"))
@@ -88,7 +89,7 @@ class MainGamePlace(var screenWidth: Float, var screenHeight: Float) {
         if (bigEnemies.size < GlobalConfig.MAX_ENEMY_COUNT) {
             var countToAdd = GlobalConfig.MAX_ENEMY_COUNT - bigEnemies.size
             while (countToAdd > 0) {
-                bigEnemies.add(com.rknavoider.models.BigEnemy(MathUtils.random.nextInt(horizontalBounds).toFloat(), screenHeight + MathUtils.random.nextInt(verticalBounds).toFloat()))
+                bigEnemies.add(com.rknavoider.models.BigRknEnemy(MathUtils.random.nextInt(horizontalBounds).toFloat(), screenHeight + MathUtils.random.nextInt(verticalBounds).toFloat()))
                 countToAdd--
             }
         }
@@ -102,9 +103,8 @@ class MainGamePlace(var screenWidth: Float, var screenHeight: Float) {
         }
     }
 
-
-    private fun clearEnemies(enemies: MutableList<BigEnemy>) {
-        for (enemy in enemies) {
+    private fun clearEnemies(rknEnemies: MutableList<BigRknEnemy>) {
+        for (enemy in rknEnemies) {
             bigEnemies.remove(enemy)
         }
     }
