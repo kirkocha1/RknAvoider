@@ -22,7 +22,6 @@ class GameOverScreen(private val avoiderGame: RknAvoiderGame) : Screen {
     private var timeToShow: Float = GlobalConfig.GAME_OVER_TIME
 
     override fun render(delta: Float) {
-        batch.projectionMatrix = camera.combined
         batch.begin()
         batch.draw(bkg, 0f, 0f, screenWidth, screenHeight)
         batch.end()
@@ -42,5 +41,8 @@ class GameOverScreen(private val avoiderGame: RknAvoiderGame) : Screen {
 
     override fun resize(width: Int, height: Int) {}
 
-    override fun dispose() {}
+    override fun dispose() {
+        bkg.dispose()
+        batch.dispose()
+    }
 }

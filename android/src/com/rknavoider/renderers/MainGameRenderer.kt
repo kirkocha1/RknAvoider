@@ -34,7 +34,7 @@ class MainGameRenderer(
         background.updateAndRender(delta, batcher)
         rknAvoiderPlace.render(delta, batcher)
         val scoreLabel = Label("SCORE: " + rknAvoiderPlace.score, Label.LabelStyle(defaultFont, Color.WHITE));
-        val lifeCount = Label("LIFE: " + rknAvoiderPlace.telegramPlayer.lifeCount, Label.LabelStyle(defaultFont, Color.WHITE));
+        val lifeCount = Label("LIFE: " + rknAvoiderPlace.lifesCount, Label.LabelStyle(defaultFont, Color.WHITE));
         scoreLabel.fontScaleX = 3f
         scoreLabel.fontScaleY = 3f
         lifeCount.fontScaleX = 3f

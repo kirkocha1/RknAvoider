@@ -5,11 +5,11 @@ import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
-import com.rknavoider.models.TelegramPlayer
+import com.rknavoider.utils.ClickListener
 
 class InputHandler(
-        private val telegramPlayer: TelegramPlayer,
-        private val cam: OrthographicCamera
+        private val clickListener: ClickListener,
+        private val camera: OrthographicCamera
 ) : InputProcessor {
     override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int) = false
 
@@ -22,8 +22,7 @@ class InputHandler(
     override fun keyUp(keycode: Int) = false
 
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
-
-        telegramPlayer.onClick(getInputInGameWorld().x, getInputInGameWorld().y)
+        clickListener.onClick(getInputInGameWorld().x, getInputInGameWorld().y)
         return true
     }
 
@@ -33,7 +32,7 @@ class InputHandler(
 
     fun getInputInGameWorld(): Vector2 {
         val inputScreen = Vector3(Gdx.input.x.toFloat(), Gdx.input.y.toFloat(), 0f)
-        val unprojected = cam.project(inputScreen)
-        return Vector2(unprojected.x, unprojected.y)
+        val projected = camera.project(inputScreen)
+        return Vector2(projected.x, projected.y)
     }
 }

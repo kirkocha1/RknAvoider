@@ -4,17 +4,20 @@ import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.MathUtils
 import com.rknavoider.configs.GlobalConfig
+import com.rknavoider.utils.ClickListener
 
-class RknAvoiderWorld(var screenWidth: Float, var screenHeight: Float) {
+class RknAvoiderWorld(var screenWidth: Float, var screenHeight: Float) : ClickListener {
 
-    private val bigEnemies = mutableListOf<BigRknEnemy>()
+    private val rknEnemies = mutableListOf<BigRknEnemy>()
     private var bullets = mutableListOf<Bullet>()
-    var telegramPlayer = TelegramPlayer(screenWidth / 2, screenHeight / 2, GlobalConfig.PLAYER_WIDTH, GlobalConfig.PLAYER_WIDTH)
+    private var telegramPlayer = TelegramPlayer(screenWidth / 2, screenHeight / 2, GlobalConfig.PLAYER_WIDTH, GlobalConfig.PLAYER_WIDTH)
+    private val rknEnemiesToRemove = mutableListOf<BigRknEnemy>()
+    private val bulletsToRemove = mutableListOf<Bullet>()
+    private var nextBulletTime = GlobalConfig.BULLET_DELAY.toFloat()
+    private val hitSoundEnemy = Gdx.audio.newSound(Gdx.files.internal("data/EnemyDestroyed.wav"))
+
     var score = 0
-    val rknEnemiesToRemove = mutableListOf<BigRknEnemy>()
-    val bulletsToRemove = mutableListOf<Bullet>()
-    var nextBulletTime = GlobalConfig.BULLET_DELAY.toFloat()
-    val hitSoundEnemy = Gdx.audio.newSound(Gdx.files.internal("data/EnemyDestroyed.wav"))
+    val lifesCount get() = telegramPlayer.lifesCount
 
     init {
         createNewEnemies()
@@ -37,13 +40,19 @@ class RknAvoiderWorld(var screenWidth: Float, var screenHeight: Float) {
         clearBullets(bulletsToRemove)
     }
 
+    fun isGameOver() = telegramPlayer.wasKilled
+
+    override fun onClick(x: Float, y: Float) {
+        telegramPlayer.onClick(x, y)
+    }
+
+
     private fun clearBullets(bulletsToRemove: MutableList<Bullet>) {
         for (bullet in bulletsToRemove) {
+            bullet.dispose()
             bullets.remove(bullet)
         }
     }
-
-    fun isGameOver() = telegramPlayer.wasKilled
 
     private fun drawBullets(delta: Float, batch: SpriteBatch) {
         if (Gdx.input.isTouched && nextBulletTime < 0) {
@@ -52,7 +61,7 @@ class RknAvoiderWorld(var screenWidth: Float, var screenHeight: Float) {
         }
 
         for (bullet in bullets) {
-            for (enemy in bigEnemies) {
+            for (enemy in rknEnemies) {
                 if (bullet.collisionRect.collidesWith(enemy.collisionRect)) {
                     hitSoundEnemy.play()
                     bulletsToRemove.add(bullet)
@@ -64,19 +73,19 @@ class RknAvoiderWorld(var screenWidth: Float, var screenHeight: Float) {
         bullets.removeAll(bulletsToRemove)
 
         for (bullet in bullets) {
-            bullet.render(batch)
+            bullet.draw(batch)
         }
     }
 
     private fun renderEnemies(delta: Float, batch: SpriteBatch) {
         createNewEnemies()
-        for (bigEnemy in bigEnemies) {
+        for (bigEnemy in rknEnemies) {
             bigEnemy.update(delta)
             if (bigEnemy.remove) {
                 rknEnemiesToRemove.add(bigEnemy)
             }
         }
-        for (bigEnemy in bigEnemies) {
+        for (bigEnemy in rknEnemies) {
             bigEnemy.draw(batch)
         }
         checkForCollision()
@@ -86,17 +95,17 @@ class RknAvoiderWorld(var screenWidth: Float, var screenHeight: Float) {
     private fun createNewEnemies() {
         val horizontalBounds = (screenWidth - GlobalConfig.BIG_ENEMY_WIDTH).toInt()
         val verticalBounds = (screenHeight / 2).toInt()
-        if (bigEnemies.size < GlobalConfig.MAX_ENEMY_COUNT) {
-            var countToAdd = GlobalConfig.MAX_ENEMY_COUNT - bigEnemies.size
+        if (rknEnemies.size < GlobalConfig.MAX_ENEMY_COUNT) {
+            var countToAdd = GlobalConfig.MAX_ENEMY_COUNT - rknEnemies.size
             while (countToAdd > 0) {
-                bigEnemies.add(com.rknavoider.models.BigRknEnemy(MathUtils.random.nextInt(horizontalBounds).toFloat(), screenHeight + MathUtils.random.nextInt(verticalBounds).toFloat()))
+                rknEnemies.add(com.rknavoider.models.BigRknEnemy(MathUtils.random.nextInt(horizontalBounds).toFloat(), screenHeight + MathUtils.random.nextInt(verticalBounds).toFloat()))
                 countToAdd--
             }
         }
     }
 
     private fun checkForCollision() {
-        for (bigEnemy in bigEnemies) {
+        for (bigEnemy in rknEnemies) {
             if (bigEnemy.collisionRect.collidesWith(telegramPlayer.playerRect)) {
                 telegramPlayer.hit()
             }
@@ -105,7 +114,21 @@ class RknAvoiderWorld(var screenWidth: Float, var screenHeight: Float) {
 
     private fun clearEnemies(rknEnemies: MutableList<BigRknEnemy>) {
         for (enemy in rknEnemies) {
-            bigEnemies.remove(enemy)
+            enemy.dispose()
+            this.rknEnemies.remove(enemy)
         }
+    }
+
+    fun dispose() {
+        hitSoundEnemy.dispose()
+        telegramPlayer.dispose()
+        for (enemy in rknEnemies) {
+            enemy.dispose()
+        }
+        for (bullet in bullets) {
+            bullet.dispose()
+        }
+        clearEnemies(rknEnemiesToRemove)
+        clearBullets(bulletsToRemove)
     }
 }

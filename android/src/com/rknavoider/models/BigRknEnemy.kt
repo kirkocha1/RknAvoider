@@ -13,6 +13,7 @@ class BigRknEnemy(var x: Float, var y: Float) : Drawer {
     val collisionRect = CollisionRect(x, y, GlobalConfig.BIG_ENEMY_WIDTH, GlobalConfig.BIG_ENEMY_HEIGHT)
     val SPEED = random.nextFloat() * (GlobalConfig.MAX_ENEMY_SPEED)
     var remove = false
+
     fun update(deltaTime: Float) {
         y -= SPEED * deltaTime
         if (y < -GlobalConfig.BIG_ENEMY_HEIGHT) {
@@ -23,6 +24,10 @@ class BigRknEnemy(var x: Float, var y: Float) : Drawer {
 
     override fun draw(batcher: SpriteBatch) {
         batcher.draw(texture, x, y, GlobalConfig.BIG_ENEMY_WIDTH.toFloat(), GlobalConfig.BIG_ENEMY_HEIGHT.toFloat())
+    }
+
+    override fun dispose() {
+        texture.dispose()
     }
 
 }

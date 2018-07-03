@@ -14,7 +14,7 @@ class TelegramPlayer(
         private var y: Float,
         private var width: Int,
         private var height: Int,
-        var lifeCount: Int = GlobalConfig.LIFE_COUNT
+        var lifesCount: Int = GlobalConfig.LIFE_COUNT
 ) : Drawer {
 
     private val previousClickPosition = Vector2(x, y)
@@ -80,7 +80,7 @@ class TelegramPlayer(
             if (isImmortal) {
                 drawImmortal(batcher)
             } else {
-                if (lifeCount <= 1) {
+                if (lifesCount <= 1) {
                     batcher.draw(telegramHurtedTexture, position.x, position.y, width.toFloat(), height.toFloat())
                 } else {
                     batcher.draw(telegramTexture, position.x, position.y, width.toFloat(), height.toFloat())
@@ -92,8 +92,8 @@ class TelegramPlayer(
 
     fun hit() {
         if (!isImmortal) {
-            lifeCount--
-            if (lifeCount < 0) {
+            lifesCount--
+            if (lifesCount < 0) {
                 wasKilled = true
             } else {
                 hitSound.play()
@@ -114,6 +114,12 @@ class TelegramPlayer(
         } else {
             isBlank = true
         }
+    }
+
+    override fun dispose() {
+        telegramTexture.dispose()
+        telegramHurtedTexture.dispose()
+        hitSound.dispose()
     }
 }
 

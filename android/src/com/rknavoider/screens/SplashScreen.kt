@@ -22,7 +22,6 @@ class SplashScreen(private val avoiderGame: RknAvoiderGame) : Screen {
     private val bkg = Texture("bkg_splash.png")
 
     override fun render(delta: Float) {
-        batch.projectionMatrix = camera.combined
         batch.begin()
         batch.draw(bkg, 0f, 0f, screenWidth, screenHeight)
         if (Gdx.input.isTouched) {
@@ -41,5 +40,8 @@ class SplashScreen(private val avoiderGame: RknAvoiderGame) : Screen {
 
     override fun resize(width: Int, height: Int) {}
 
-    override fun dispose() {}
+    override fun dispose() {
+        bkg.dispose()
+        batch.dispose()
+    }
 }

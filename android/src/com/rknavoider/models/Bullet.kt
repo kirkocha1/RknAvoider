@@ -4,8 +4,9 @@ import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.rknavoider.configs.GlobalConfig
 import com.rknavoider.utils.CollisionRect
+import com.rknavoider.utils.Drawer
 
-class Bullet(var x: Float, var y: Float) {
+class Bullet(var x: Float, var y: Float) : Drawer {
     val SPEED = 700
     private var texture = Texture("BulletReady.png")
     var collisionRect = CollisionRect(x, y, GlobalConfig.BULLET_WIDTH, GlobalConfig.BULLET_WIDTH)
@@ -19,7 +20,11 @@ class Bullet(var x: Float, var y: Float) {
         collisionRect.move(x, y)
     }
 
-    fun render(batch: SpriteBatch) {
-        batch.draw(texture, x, y, GlobalConfig.BULLET_WIDTH.toFloat(), GlobalConfig.BULLET_WIDTH.toFloat())
+    override fun draw(batcher: SpriteBatch) {
+        batcher.draw(texture, x, y, GlobalConfig.BULLET_WIDTH.toFloat(), GlobalConfig.BULLET_WIDTH.toFloat())
+    }
+
+    override fun dispose() {
+        texture.dispose()
     }
 }

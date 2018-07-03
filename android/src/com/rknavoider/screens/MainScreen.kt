@@ -16,7 +16,7 @@ class MainScreen(avoiderGame: RknAvoiderGame) : Screen {
     private val mainThemeSound = Gdx.audio.newSound(Gdx.files.internal("data/MainTheme.mp3"))
 
     init {
-        Gdx.input.inputProcessor = InputHandler(rknAvoiderWorld.telegramPlayer, renderer.cam)
+        Gdx.input.inputProcessor = InputHandler(rknAvoiderWorld, renderer.cam)
     }
 
     override fun show() {
@@ -38,5 +38,8 @@ class MainScreen(avoiderGame: RknAvoiderGame) : Screen {
 
     override fun hide() {}
 
-    override fun dispose() {}
+    override fun dispose() {
+        mainThemeSound.dispose()
+        rknAvoiderWorld.dispose()
+    }
 }
